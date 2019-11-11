@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "696981238038",
+    "firebase_url": "https://projeto-topicosavancados.firebaseio.com",
+    "project_id": "projeto-topicosavancados",
+    "storage_bucket": "projeto-topicosavancados.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696981238038:android:4cce877f00f6746eae6037",
+        "android_client_info": {
+          "package_name": "com.example.sentinel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "696981238038-iaf8rsn278fmm03611f892nphsao9v9d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sentinel",
+            "certificate_hash": "14900984e9bd5a79f3fc66d3d0f1a20bc04969bc"
+          }
+        },
+        {
+          "client_id": "696981238038-f1qbdnvq0pjs3gvdt6rkbecoaetd8hkr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA81avbyurfINLvQpV25Rl5ygOns-ILc5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "696981238038-f1qbdnvq0pjs3gvdt6rkbecoaetd8hkr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
