@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -30,7 +31,13 @@ public class DashboardGuestActivity extends AppCompatActivity {
         View btnLogin = findViewById(R.id.buttonLogin);
 
 
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DashboardGuestActivity.this, LoginActivity.class));
 
+            }
+        });
 
         DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
         databasereference.child("Sensores").addValueEventListener(new ValueEventListener() {
@@ -91,6 +98,5 @@ public class DashboardGuestActivity extends AppCompatActivity {
         });
     }
 
-    public void login(View view) {
-    }
+
 }

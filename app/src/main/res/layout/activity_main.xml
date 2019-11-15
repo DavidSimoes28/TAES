@@ -27,7 +27,6 @@
                 android:id="@+id/buttonLogin"
                 android:layout_width="168dp"
                 android:layout_height="wrap_content"
-                android:onClick="login"
                 android:text="login" />
 
             <Button
