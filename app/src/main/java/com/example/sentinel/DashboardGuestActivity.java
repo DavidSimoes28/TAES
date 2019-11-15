@@ -2,20 +2,16 @@ package com.example.sentinel;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Iterator;
@@ -31,15 +27,10 @@ public class DashboardGuestActivity extends AppCompatActivity {
         temperaturaField = findViewById(R.id.textViewTemp);
         humidadeField = findViewById(R.id.textViewHumidade);
         globalField = findViewById(R.id.textViewGlobal);
-        View btnLogin = findViewById(R.id.button_login);
+        View btnLogin = findViewById(R.id.buttonLogin);
 
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), LoginActivity.class);
-                view.getContext().startActivity(intent);}
-        });
+
 
         DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
         databasereference.child("Sensores").addValueEventListener(new ValueEventListener() {
