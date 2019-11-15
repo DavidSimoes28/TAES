@@ -75,15 +75,13 @@ public class LoginActivity extends AppCompatActivity {
                         }task.isSuccessful();
                     }
                 });
-                btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        inputEmail.setText("");
-                        inputPassword.setText("");
-                    }
-                });
             }
         });
-
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }
