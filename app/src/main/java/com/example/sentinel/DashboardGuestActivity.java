@@ -13,8 +13,12 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Iterator;
 
 public class DashboardGuestActivity extends AppCompatActivity {
 
@@ -37,13 +41,27 @@ public class DashboardGuestActivity extends AppCompatActivity {
                 view.getContext().startActivity(intent);}
         });
 
-        FirebaseDatabase.getInstance().getReference().addValueEventListener(new ValueEventListener() {
+        DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
+        databasereference.child("Sensores").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int hum = Integer.parseInt(dataSnapshot.child("Humidade").getValue().toString());
-                int temp = Integer.parseInt(dataSnapshot.child("Temperatura").getValue().toString());
-                humidadeField.setText(dataSnapshot.child("Humidade").getValue().toString() + "%");
-                temperaturaField.setText(dataSnapshot.child("Temperatura").getValue().toString() + " ºC");
+                int hum = 0;
+                int temp = 0;
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                int medHum= 0;
+                int medTemp =0,i=0;
+                while( iterator.hasNext()) {
+                    DataSnapshot item = iterator.next();
+                    medHum += Integer.parseInt(item.child("Humidade").getValue().toString());
+                    medTemp += Integer.parseInt(item.child("Temperatura").getValue().toString());
+                    i++;
+                }
+
+                hum = medHum / i;
+                temp = medTemp / i;
+
+                humidadeField.setText(hum + "%");
+                temperaturaField.setText(temp + " ºC");
                 if(temp>=35 && hum>=75){
                     humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
                     temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
