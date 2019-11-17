@@ -7,6 +7,7 @@ import androidx.core.content.res.ResourcesCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +21,7 @@ import java.util.Iterator;
 public class DashboardGuestActivity extends AppCompatActivity {
 
     private TextView temperaturaField, humidadeField, globalField;
+    private Button btnRegister;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,7 @@ public class DashboardGuestActivity extends AppCompatActivity {
         humidadeField = findViewById(R.id.textViewHumidade);
         globalField = findViewById(R.id.textViewGlobal);
         View btnLogin = findViewById(R.id.buttonLogin);
+        btnRegister = findViewById(R.id.buttonRegister);
 
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -36,6 +39,13 @@ public class DashboardGuestActivity extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(new Intent(DashboardGuestActivity.this, LoginActivity.class));
 
+            }
+        });
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardGuestActivity.this, RegisterActivity.class));
             }
         });
 
