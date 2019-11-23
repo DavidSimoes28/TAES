@@ -25,7 +25,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private Button btnRegister, btnCancel;
-    private EditText inputEmail, inputPassword;
+    private EditText inputEmail, inputPassword, inputPasswordConfirmation;
     private TextView forgetPassword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.buttonRegister);
         inputEmail = findViewById(R.id.editTextEmail);
         inputPassword = findViewById(R.id.editTextPassword);
+        inputPasswordConfirmation = findViewById(R.id.editTextConfirmPassword);
         btnCancel = findViewById(R.id.buttonCancelarLogin);
         forgetPassword = findViewById(R.id.textViewForgetPassword);
 
@@ -45,6 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String email = inputEmail.getText().toString().trim();
                 final String password = inputPassword.getText().toString().trim();
+                final String passwordConfirmation = inputPasswordConfirmation.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
@@ -58,6 +60,11 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (password.length() < 6) {
                     Toast.makeText(getApplicationContext(), "Password to small!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!password.equals(passwordConfirmation)) {
+                    Toast.makeText(getApplicationContext(), "Password and Confirm password are not the same!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
