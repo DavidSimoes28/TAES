@@ -76,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     if (task.isSuccessful()){
                                         Toast.makeText(getApplicationContext(), "Registeracion success.", Toast.LENGTH_SHORT).show();
                                         UserManager.INSTANCE.addUser(user);
-                                        //startActivity(new Intent(LoginActivity.this,Main2Activity.class));
+                                        finish();
                                     }
                                 }
                             });
