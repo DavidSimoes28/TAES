@@ -27,22 +27,33 @@ public class LoggedDashboardActivity extends AppCompatActivity {
 
     private int hum;
     private int temp;
-    private TextView temperaturaField,humidadeField, globalField;
+    private TextView temperaturaField,humidadeField, globalField,dateField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_dashboard);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            String value = extras.getString("email");
+        }
 
         temperaturaField = findViewById(R.id.textViewTemperature);
         humidadeField = findViewById(R.id.textViewHumidadel);
         globalField = findViewById(R.id.textViewGloball);
+
+        dateField = findViewById(R.id.textViewDatel);
 
 
         DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
         databasereference.child("Sensores").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+
+
 
 
                 List<String> ids = new LinkedList<String>();
@@ -66,15 +77,16 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                             if (Objects.equals(areaSnapshot.child("Localizacao").getValue(String.class), spin.getItemAtPosition(position).toString())){
                                  hum = Integer.parseInt(areaSnapshot.child("Humidade").getValue().toString());
                                  temp = Integer.parseInt(areaSnapshot.child("Temperatura").getValue().toString());
+                                 dateField.setText(areaSnapshot.child("Data").getValue().toString());
                                 humidadeField.setText(hum + "%");
                                 temperaturaField.setText(temp + " ºC");
 
-                                if(temp>=35 && hum>=75){
+                                if((temp>35 || temp<19) && (hum>75 || hum<50)){
                                     humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
                                     temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
                                     globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
                                     globalField.setText("MAU");
-                                }else if(temp<=19 && hum<=50){
+                                }else if((temp<=35 && temp>=19) && (hum>=50 && hum<=75)){
                                     humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
                                     temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
                                     globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
@@ -82,20 +94,18 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                                 }else{
                                     globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_yellow, null));
                                     globalField.setText("MÉDIO");
-                                    if(temp<=19){
-                                        temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
-                                    }else if(temp>=35){
+                                    if(temp<19 || temp>35){
                                         temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
+
                                     }else{
-                                        temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_yellow, null));
+                                        temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
                                     }
 
-                                    if(hum<=50){
-                                        humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
-                                    }else if(hum>=75){
+                                    if(hum<50 || hum>75){
                                         humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
+
                                     }else{
-                                        humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_yellow, null));
+                                        humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
                                     }
                                 }
                                 break;
