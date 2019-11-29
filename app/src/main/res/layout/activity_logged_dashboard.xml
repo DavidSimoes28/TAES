@@ -129,16 +129,16 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonFavorite"
             android:layout_width="136dp"
             android:layout_height="match_parent"
-            android:text="Button" />
+            android:text="Favorite" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/buttonStatistics"
             android:layout_width="142dp"
             android:layout_height="66dp"
-            android:text="Button" />
+            android:text="Statistics" />
 
         <Button
             android:id="@+id/buttonShare"
