@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoggedDashboardActivity"></activity>
+        <activity android:name=".RegisterSensorActivity"></activity>
+        <activity android:name=".LoggedDashboardActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".DashboardGuestActivity">
             <intent-filter>

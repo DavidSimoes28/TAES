@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     private int hum;
     private int temp;
     private TextView temperaturaField,humidadeField, globalField,dateField;
+    private Button btnSend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,18 @@ public class LoggedDashboardActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_dashboard);
+
+        btnSend = findViewById(R.id.buttonSendData);
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(LoggedDashboardActivity.this, RegisterSensorActivity.class);
+                    startActivity(intent);
+                }
+            })
+            ;
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null){
@@ -76,7 +91,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                         for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
                             if (Objects.equals(areaSnapshot.child("Localizacao").getValue(String.class), spin.getItemAtPosition(position).toString())){
                                  hum = Integer.parseInt(areaSnapshot.child("Humidade").getValue().toString());
-                                 temp = Integer.parseInt(areaSnapshot.child("Temperatura").getValue().toString());
+                                 temp = Integer.parseInt(a reaSnapshot.child("Temperatura").getValue().toString());
                                  dateField.setText(areaSnapshot.child("Data").getValue().toString());
                                 humidadeField.setText(hum + "%");
                                 temperaturaField.setText(temp + " ºC");
@@ -129,6 +144,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
         });
 
         }
+
     }
 
 
