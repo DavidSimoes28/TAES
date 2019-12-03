@@ -38,6 +38,13 @@ public class LoginActivity extends AppCompatActivity {
         btnCancel = findViewById(R.id.buttonCancelarLogin);
         forgetPassword = findViewById(R.id.textViewForgetPassword);
 
+        forgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this,ForgetPasswordActivity.class));
+            }
+        });
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
