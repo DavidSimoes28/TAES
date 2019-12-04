@@ -59,7 +59,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 List<String> ids = new LinkedList<String>();
 
                 for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
-                    String id = areaSnapshot.child("Localizacao").getValue(String.class);
+                    String id = areaSnapshot.child("localizacao").getValue(String.class);
                     ids.add(id);
                 }
 
@@ -74,10 +74,10 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                         for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
-                            if (Objects.equals(areaSnapshot.child("Localizacao").getValue(String.class), spin.getItemAtPosition(position).toString())){
-                                 hum = Integer.parseInt(areaSnapshot.child("Humidade").getValue().toString());
-                                 temp = Integer.parseInt(areaSnapshot.child("Temperatura").getValue().toString());
-                                 dateField.setText(areaSnapshot.child("Data").getValue().toString());
+                            if (Objects.equals(areaSnapshot.child("localizacao").getValue(String.class), spin.getItemAtPosition(position).toString())){
+                                 hum = Integer.parseInt(areaSnapshot.child("humidade").getValue().toString());
+                                 temp = Integer.parseInt(areaSnapshot.child("temperatura").getValue().toString());
+                                 dateField.setText(areaSnapshot.child("data").getValue().toString());
                                 humidadeField.setText(hum + "%");
                                 temperaturaField.setText(temp + " ºC");
 
