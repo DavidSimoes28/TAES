@@ -44,7 +44,10 @@ public class LoggedDashboardActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Intent intentReceived = getIntent();
+                    String email = intentReceived.getStringExtra("email");
                     Intent intent = new Intent(LoggedDashboardActivity.this, RegisterSensorActivity.class);
+                    intent.putExtra("email",email);
                     startActivity(intent);
                 }
             })
@@ -68,9 +71,6 @@ public class LoggedDashboardActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
 
-
-
-
                 List<String> ids = new LinkedList<String>();
 
                 for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
@@ -91,7 +91,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                         for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
                             if (Objects.equals(areaSnapshot.child("Localizacao").getValue(String.class), spin.getItemAtPosition(position).toString())){
                                  hum = Integer.parseInt(areaSnapshot.child("Humidade").getValue().toString());
-                                 temp = Integer.parseInt(a reaSnapshot.child("Temperatura").getValue().toString());
+                                 temp = Integer.parseInt(areaSnapshot.child("Temperatura").getValue().toString());
                                  dateField.setText(areaSnapshot.child("Data").getValue().toString());
                                 humidadeField.setText(hum + "%");
                                 temperaturaField.setText(temp + " ºC");
