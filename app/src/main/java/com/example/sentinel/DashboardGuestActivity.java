@@ -60,8 +60,8 @@ public class DashboardGuestActivity extends AppCompatActivity {
                 int medTemp =0,i=0;
                 while( iterator.hasNext()) {
                     DataSnapshot item = iterator.next();
-                    medHum += Integer.parseInt(item.child("Humidade").getValue().toString());
-                    medTemp += Integer.parseInt(item.child("Temperatura").getValue().toString());
+                    medHum += Integer.parseInt(item.child("humidade").getValue().toString());
+                    medTemp += Integer.parseInt(item.child("temperatura").getValue().toString());
                     i++;
                 }
 
