@@ -141,7 +141,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                         + "ºC\nHumidade: "+ hum
                         + "\nAvaliação geral: " + globalEvaluation
                         + "\n\n Sentinel Application";
-                String tweetUrl = "https://twitter.com/intent/tweet?text=" + ShareMessage;
+                String tweetUrl = "https://twitter.com/intent/tweet?text=" + Uri.encode(ShareMessage);
                 Uri uri = Uri.parse(tweetUrl);
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 //https://stackoverflow.com/questions/14664763/android-sharing-on-twitter
