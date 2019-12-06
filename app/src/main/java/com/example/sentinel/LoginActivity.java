@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sentinel.model.User;
+import com.example.sentinel.model.UserManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -49,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final String email = inputEmail.getText().toString().trim();
-                String password = inputPassword.getText().toString().trim();
+                final String password = inputPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
@@ -75,11 +77,13 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
+                            UserManager.INSTANCE.addUser(new User(email,password));
+                            UserManager.INSTANCE.setFirebaseUser(email,user);
                             Toast.makeText(getApplicationContext(), "Authentication success.", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this, LoggedDashboardActivity.class);
                             intent.putExtra("email",email);
                             startActivity(intent);
-
+                            finish();
                         } else {
                             Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }task.isSuccessful();

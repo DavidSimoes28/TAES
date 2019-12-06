@@ -15,6 +15,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sentinel.model.UserManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +35,8 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     private String localization;
     private String globalEvaluation;
     private TextView temperaturaField,humidadeField, globalField,dateField;
-    private Button btnTweet;
+    private Button btnTweet,btnLogout;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null){
-            String value = extras.getString("email");
+            email = extras.getString("email");
         }
 
         temperaturaField = findViewById(R.id.textViewTemperature);
@@ -51,6 +54,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
         globalField = findViewById(R.id.textViewGloball);
         btnTweet = findViewById(R.id.buttonShare);
         dateField = findViewById(R.id.textViewDatel);
+        btnLogout = findViewById(R.id.buttonLogOut);
 
         DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
         databasereference.child("Sensores").addValueEventListener(new ValueEventListener() {
@@ -76,41 +80,44 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                         for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
                             if (Objects.equals(areaSnapshot.child("localizacao").getValue(String.class), spin.getItemAtPosition(position).toString())){
-                                 hum = Integer.parseInt(areaSnapshot.child("humidade").getValue().toString());
-                                 temp = Integer.parseInt(areaSnapshot.child("temperatura").getValue().toString());
-                                 dateField.setText("Data do registo: " + areaSnapshot.child("data").getValue().toString());
-                                 localization = areaSnapshot.child("localizacao").getValue(String.class);
-                                humidadeField.setText(hum + "%");
-                                temperaturaField.setText(temp + " ºC");
 
-                                if((temp>35 || temp<19) && (hum>75 || hum<50)){
-                                    humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
-                                    temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
-                                    globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
-                                    globalField.setText("MAU");
-                                    globalEvaluation = "MAU";
-                                }else if((temp<=35 && temp>=19) && (hum>=50 && hum<=75)){
-                                    humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
-                                    temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
-                                    globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
-                                    globalField.setText("BOM");
-                                    globalEvaluation = "BOM";
-                                }else{
-                                    globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_yellow, null));
-                                    globalField.setText("MÉDIO");
-                                    globalEvaluation = "MÉDIO";
-                                    if(temp<19 || temp>35){
-                                        temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
+                                for ( DataSnapshot valores : areaSnapshot.child("valores").getChildren()) {
+                                    hum = Integer.parseInt(valores.child("humidade").getValue().toString());
+                                    temp = Integer.parseInt(valores.child("temperatura").getValue().toString());
+                                    dateField.setText("Data do registo: " + valores.child("data").getValue().toString());
+                                    localization = areaSnapshot.child("localizacao").getValue(String.class);
+                                    humidadeField.setText(hum + "%");
+                                    temperaturaField.setText(temp + " ºC");
 
-                                    }else{
-                                        temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
-                                    }
-
-                                    if(hum<50 || hum>75){
+                                    if((temp>35 || temp<19) && (hum>75 || hum<50)){
                                         humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
-
-                                    }else{
+                                        temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
+                                        globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
+                                        globalField.setText("MAU");
+                                        globalEvaluation = "MAU";
+                                    }else if((temp<=35 && temp>=19) && (hum>=50 && hum<=75)){
                                         humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
+                                        temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
+                                        globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
+                                        globalField.setText("BOM");
+                                        globalEvaluation = "BOM";
+                                    }else{
+                                        globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_yellow, null));
+                                        globalField.setText("MÉDIO");
+                                        globalEvaluation = "MÉDIO";
+                                        if(temp<19 || temp>35){
+                                            temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
+
+                                        }else{
+                                            temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
+                                        }
+
+                                        if(hum<50 || hum>75){
+                                            humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
+
+                                        }else{
+                                            humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
+                                        }
                                     }
                                 }
                                 break;
@@ -139,7 +146,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 String ShareMessage = "Edificio: A\nLocalização:"+ localization
                         + "\nTemperatura: "+ temp
                         + "ºC\nHumidade: "+ hum
-                        + "\nAvaliação geral: " + globalEvaluation
+                        + "%\nAvaliação geral: " + globalEvaluation
                         + "\n\n Sentinel Application";
                 String tweetUrl = "https://twitter.com/intent/tweet?text=" + Uri.encode(ShareMessage);
                 Uri uri = Uri.parse(tweetUrl);
