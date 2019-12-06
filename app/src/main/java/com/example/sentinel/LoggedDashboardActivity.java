@@ -136,8 +136,6 @@ public class LoggedDashboardActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-
-
         });
 
         btnTweet.setOnClickListener(new View.OnClickListener() {
@@ -151,7 +149,16 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 String tweetUrl = "https://twitter.com/intent/tweet?text=" + Uri.encode(ShareMessage);
                 Uri uri = Uri.parse(tweetUrl);
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                //https://stackoverflow.com/questions/14664763/android-sharing-on-twitter
+            }
+        });
+
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                UserManager.INSTANCE.setFirebaseUser(email,null);
+                finish();
             }
         });
         }
