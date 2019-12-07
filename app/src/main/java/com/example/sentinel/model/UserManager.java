@@ -1,5 +1,7 @@
 package com.example.sentinel.model;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,6 +27,23 @@ public enum UserManager {
     }
     public void removeUser(User user) {
         this.users.remove(user);
+    }
+
+    public void setFirebaseUser(String email, FirebaseUser firebaseUser){
+        for (User user : users) {
+            if(user.getEmail().equals(email)){
+                user.setUser(firebaseUser);
+            }
+        }
+    }
+
+    public FirebaseUser getFirebaseUser(String email){
+        for (User user : users) {
+            if(user.getEmail().equals(email)){
+                return user.getUser();
+            }
+        }
+        return null;
     }
 
     public User getUser(String email) {
