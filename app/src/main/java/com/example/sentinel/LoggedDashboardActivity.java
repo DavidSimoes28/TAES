@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.sql.RowSetListener;
+
 public class LoggedDashboardActivity extends AppCompatActivity {
 
     private int hum;
@@ -36,7 +39,10 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     private String globalEvaluation;
     private TextView temperaturaField,humidadeField, globalField,dateField;
     private Button btnTweet,btnLogout;
+    private ImageButton btnFavorite;
     private String email;
+    public static final int btn_star_big_off = 17301515;
+    public static final int btn_star_big_on = 17301516;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +61,10 @@ public class LoggedDashboardActivity extends AppCompatActivity {
         btnTweet = findViewById(R.id.buttonShare);
         dateField = findViewById(R.id.textViewDatel);
         btnLogout = findViewById(R.id.buttonLogOut);
+        btnFavorite = findViewById(R.id.btnFavorite);
+        final Spinner spin = (Spinner) findViewById(R.id.spinner);
 
+        btnFavorite.setImageResource(btn_star_big_off);
         DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
         databasereference.child("Sensores").addValueEventListener(new ValueEventListener() {
             @Override
@@ -68,8 +77,6 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                     ids.add(id);
                 }
 
-                final Spinner spin = (Spinner) findViewById(R.id.spinner);
-
 
                 ArrayAdapter<String> aa = new ArrayAdapter<>(LoggedDashboardActivity.this, android.R.layout.simple_spinner_dropdown_item, ids);
                 aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -78,6 +85,30 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                        FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot user : dataSnapshot.getChildren()) {
+                                    if(user.child("email").getValue().toString().equals(email)){
+                                        for (DataSnapshot favorito : user.child("favoritos").getChildren()) {
+                                            for (DataSnapshot child : favorito.getChildren()) {
+                                                if(child.getValue().toString().equals(spin.getSelectedItem().toString())){
+                                                    btnFavorite.setImageResource(btn_star_big_on);
+                                                }else{
+                                                    btnFavorite.setImageResource(btn_star_big_off);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
                         for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
                             if (Objects.equals(areaSnapshot.child("localizacao").getValue(String.class), spin.getItemAtPosition(position).toString())){
 
@@ -137,7 +168,13 @@ public class LoggedDashboardActivity extends AppCompatActivity {
 
             }
         });
+        btnFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+
+            }
+        });
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
