@@ -49,6 +49,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     public static final int btn_star_big_off = 17301515;
     public static final int btn_star_big_on = 17301516;
     private User utilizador;
+    private boolean hasFavoritos = false;
     private int aux = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +80,13 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     if(child.child("email").getValue().toString().equals(email)){
                         utilizador = new User(child.child("email").getValue().toString(),child.child("password").getValue().toString());
-                        if(child.child("favoritos").getChildren()!=null){
+                        if(child.child("favoritos").getChildren().iterator().hasNext()){
                             for (DataSnapshot favoritos : child.child("favoritos").getChildren()) {
-                                  utilizador.addFavorito(favoritos.getValue().toString());
+                                utilizador.addFavorito(favoritos.getValue().toString());
+                                hasFavoritos = true;
                             }
                         }
+                        UserManager.INSTANCE.addUser(utilizador);
                     }
                 }
             }
@@ -114,10 +117,12 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
                         btnFavorite.setImageResource(btn_star_big_off);
+                        if(hasFavoritos){
                         for (String favorito : utilizador.getFavoritos()) {
                             if(favorito.equals(spin.getSelectedItem().toString())){
                                 btnFavorite.setImageResource(btn_star_big_on);
                             }
+                        }
                         }
 
                         for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
