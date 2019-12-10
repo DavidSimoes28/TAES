@@ -112,27 +112,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                        /*FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot user : dataSnapshot.getChildren()) {
-                                    if(user.child("email").getValue().toString().equals(email)){
-                                        for (DataSnapshot favorito : user.child("favoritos").getChildren()) {
-                                            if(favorito.getValue().toString().equals(spin.getSelectedItem().toString())){
-                                                btnFavorite.setImageResource(btn_star_big_on);
-                                            }else{
-                                                btnFavorite.setImageResource(btn_star_big_off);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });*/
                         btnFavorite.setImageResource(btn_star_big_off);
                         for (String favorito : utilizador.getFavoritos()) {
                             if(favorito.equals(spin.getSelectedItem().toString())){
@@ -207,8 +187,6 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 databasereference.child("Users").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                        DataSnapshot user1 = null;
                         int i = 0;
                         for (DataSnapshot user : dataSnapshot.getChildren()) {
                             if (user.child("email").getValue().toString().equals(email)) {
@@ -216,30 +194,30 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                                     if (utilizador.getFavoritos().contains(spin.getSelectedItem().toString())) {
                                         utilizador.removeFavorito(spin.getSelectedItem().toString());
                                         btnFavorite.setImageResource(btn_star_big_off);
-                                        user.getRef().setValue(utilizador);
+                                        user.getRef().setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Toast.makeText(getApplicationContext(), "Sensor on " + spin.getSelectedItem().toString()
+                                                        + " removed from the favorites", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                         aux = 1;
                                     } else {
                                         utilizador.addFavorito(spin.getSelectedItem().toString());
                                         btnFavorite.setImageResource(btn_star_big_on);
-                                        user.getRef().setValue(utilizador);
+                                        user.getRef().setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Toast.makeText(getApplicationContext(), "Sensor on " + spin.getSelectedItem().toString()
+                                                        + " added to the favorites", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                         aux = 1;
                                     }
                                 }
                             }
                         }
                     }
-                                    /*if (!favorito.getValue().toString().equals(spin.getSelectedItem().toString())) {
-                                        utilizador.addFavorito(spin.getSelectedItem().toString());
-                                        btnFavorite.setImageResource(btn_star_big_on);
-                                        user.getRef().setValue(utilizador);
-                                        return;
-                                    }else{
-                                        utilizador.removeFavorito(spin.getSelectedItem().toString());
-                                        btnFavorite.setImageResource(btn_star_big_off);
-                                        user.getRef().setValue(utilizador);
-                                        return;
-                                    }*/
-                                //
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
