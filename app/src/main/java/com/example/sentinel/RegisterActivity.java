@@ -88,7 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Register failed.", Toast.LENGTH_SHORT).show();
                         }task.isSuccessful();
                     }
                 });

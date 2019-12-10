@@ -1,6 +1,7 @@
 package com.example.sentinel;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -16,8 +17,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sentinel.model.User;
 import com.example.sentinel.model.UserManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,7 +48,8 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     private String email;
     public static final int btn_star_big_off = 17301515;
     public static final int btn_star_big_on = 17301516;
-
+    private User utilizador;
+    private int aux = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -65,7 +71,29 @@ public class LoggedDashboardActivity extends AppCompatActivity {
         final Spinner spin = (Spinner) findViewById(R.id.spinner);
 
         btnFavorite.setImageResource(btn_star_big_off);
-        DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
+
+        databasereference.child("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    if(child.child("email").getValue().toString().equals(email)){
+                        utilizador = new User(child.child("email").getValue().toString(),child.child("password").getValue().toString());
+                        if(child.child("favoritos").getChildren()!=null){
+                            for (DataSnapshot favoritos : child.child("favoritos").getChildren()) {
+                                  utilizador.addFavorito(favoritos.getValue().toString());
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         databasereference.child("Sensores").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
@@ -77,7 +105,6 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                     ids.add(id);
                 }
 
-
                 ArrayAdapter<String> aa = new ArrayAdapter<>(LoggedDashboardActivity.this, android.R.layout.simple_spinner_dropdown_item, ids);
                 aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 //Setting the ArrayAdapter data on the Spinner
@@ -85,18 +112,16 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                        FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
+                        /*FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot user : dataSnapshot.getChildren()) {
                                     if(user.child("email").getValue().toString().equals(email)){
                                         for (DataSnapshot favorito : user.child("favoritos").getChildren()) {
-                                            for (DataSnapshot child : favorito.getChildren()) {
-                                                if(child.getValue().toString().equals(spin.getSelectedItem().toString())){
-                                                    btnFavorite.setImageResource(btn_star_big_on);
-                                                }else{
-                                                    btnFavorite.setImageResource(btn_star_big_off);
-                                                }
+                                            if(favorito.getValue().toString().equals(spin.getSelectedItem().toString())){
+                                                btnFavorite.setImageResource(btn_star_big_on);
+                                            }else{
+                                                btnFavorite.setImageResource(btn_star_big_off);
                                             }
                                         }
                                     }
@@ -107,7 +132,13 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                             public void onCancelled(@NonNull DatabaseError databaseError) {
 
                             }
-                        });
+                        });*/
+                        btnFavorite.setImageResource(btn_star_big_off);
+                        for (String favorito : utilizador.getFavoritos()) {
+                            if(favorito.equals(spin.getSelectedItem().toString())){
+                                btnFavorite.setImageResource(btn_star_big_on);
+                            }
+                        }
 
                         for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
                             if (Objects.equals(areaSnapshot.child("localizacao").getValue(String.class), spin.getItemAtPosition(position).toString())){
@@ -172,6 +203,49 @@ public class LoggedDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                aux = 0;
+                databasereference.child("Users").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                        DataSnapshot user1 = null;
+                        int i = 0;
+                        for (DataSnapshot user : dataSnapshot.getChildren()) {
+                            if (user.child("email").getValue().toString().equals(email)) {
+                                if (aux == 0) {
+                                    if (utilizador.getFavoritos().contains(spin.getSelectedItem().toString())) {
+                                        utilizador.removeFavorito(spin.getSelectedItem().toString());
+                                        btnFavorite.setImageResource(btn_star_big_off);
+                                        user.getRef().setValue(utilizador);
+                                        aux = 1;
+                                    } else {
+                                        utilizador.addFavorito(spin.getSelectedItem().toString());
+                                        btnFavorite.setImageResource(btn_star_big_on);
+                                        user.getRef().setValue(utilizador);
+                                        aux = 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                                    /*if (!favorito.getValue().toString().equals(spin.getSelectedItem().toString())) {
+                                        utilizador.addFavorito(spin.getSelectedItem().toString());
+                                        btnFavorite.setImageResource(btn_star_big_on);
+                                        user.getRef().setValue(utilizador);
+                                        return;
+                                    }else{
+                                        utilizador.removeFavorito(spin.getSelectedItem().toString());
+                                        btnFavorite.setImageResource(btn_star_big_off);
+                                        user.getRef().setValue(utilizador);
+                                        return;
+                                    }*/
+                                //
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
             }
         });
@@ -194,7 +268,6 @@ public class LoggedDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                UserManager.INSTANCE.setFirebaseUser(email,null);
                 finish();
             }
         });
