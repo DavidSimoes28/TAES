@@ -1,73 +1,86 @@
 package com.example.sentinel.model;
 
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Sensor {
-    private String Localizacao;
-    private String Humidade;
-    private String Data;
-    private String Temperatura;
-    private String Edificio;
-    private List<String> Favoritos;
+    private int id;
+    private String localizacao;
+    private String humidade;
+    private String data;
+    private String temperatura;
+    private String edificio;
+    private List<Favoritos> favoritos;
 
 
-    public Sensor(String localizacao, String humidade, String data, String temperatura,String email) {
-        Localizacao = localizacao;
-        Humidade = humidade;
-        Data = data;
-        Temperatura = temperatura;
-        Edificio = "A";
-        Favoritos = new LinkedList<>();
-        Favoritos.add(email);
+    public Sensor(int id,String localizacao, String humidade, String data, String temperatura,Favoritos email) {
+        this.id = id;
+        this.localizacao = localizacao;
+        this.humidade = humidade;
+        this.data = data;
+        this.temperatura = temperatura;
+        edificio = "A";
+        favoritos = new LinkedList<>();
+        favoritos.add(email);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<Favoritos> getFavoritos() {
+        return favoritos;
+    }
+
+    public void setFavoritos(List<Favoritos> favoritos) {
+        this.favoritos = favoritos;
     }
 
     public String getLocalizacao() {
-        return Localizacao;
+        return localizacao;
     }
 
     public void setLocalizacao(String localizacao) {
-        Localizacao = localizacao;
+        this.localizacao = localizacao;
     }
 
     public String getHumidade() {
-        return Humidade;
+        return humidade;
     }
 
     public void setHumidade(String humidade) {
-        Humidade = humidade;
+        this.humidade = humidade;
     }
 
     public String getData() {
-        return Data;
+        return data;
     }
 
     public void setData(String data) {
-        Data = data;
+        this.data = data;
     }
 
     public String getTemperatura() {
-        return Temperatura;
+        return temperatura;
     }
 
     public void setTemperatura(String temperatura) {
-        Temperatura = temperatura;
+        this.temperatura = temperatura;
     }
 
     public String getEdificio() {
-        return Edificio;
+        return edificio;
     }
 
     public void setEdificio(String edificio) {
-        Edificio = edificio;
+        this.edificio = edificio;
     }
 
-    public List getFavoritos() {
-        return Favoritos;
-    }
 
-    public void setFavoritos(List favoritos) {
-        Favoritos = favoritos;
-    }
 }
