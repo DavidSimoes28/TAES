@@ -2,13 +2,24 @@ package com.example.sentinel.model;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 public class User {
     private String email;
     private String password;
-    private FirebaseUser user;
+    private List<String> favoritos;
+
+    public User() {
+        this.favoritos = new ArrayList<>();
+    }
+
     public User(String email, String password) {
         this.email = email;
         this.password = password;
+        this.favoritos = new ArrayList<>();
     }
 
     public String getEmail() {
@@ -27,11 +38,19 @@ public class User {
         this.password = password;
     }
 
-    public FirebaseUser getUser() {
-        return user;
+    public List<String> getFavoritos() {
+        return favoritos;
     }
 
-    public void setUser(FirebaseUser user) {
-        this.user = user;
+    public void setFavoritos(List<String> favoritos) {
+        this.favoritos = favoritos;
+    }
+
+    public void addFavorito(String favorite) {
+        this.favoritos.add(favorite);
+    }
+
+    public void removeFavorito(String favorito) {
+        this.favoritos.remove(favorito);
     }
 }
