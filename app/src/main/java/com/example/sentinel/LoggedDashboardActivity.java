@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +30,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,6 +82,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
         databasereference.child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                hasFavoritos = false;
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     if(child.child("email").getValue().toString().equals(email)){
                         utilizador = new User(child.child("email").getValue().toString(),child.child("password").getValue().toString());
@@ -118,52 +124,70 @@ public class LoggedDashboardActivity extends AppCompatActivity {
 
                         btnFavorite.setImageResource(btn_star_big_off);
                         if(hasFavoritos){
-                        for (String favorito : utilizador.getFavoritos()) {
-                            if(favorito.equals(spin.getSelectedItem().toString())){
-                                btnFavorite.setImageResource(btn_star_big_on);
+                            for (String favorito : utilizador.getFavoritos()) {
+                                if(favorito.equals(spin.getSelectedItem().toString())){
+                                    btnFavorite.setImageResource(btn_star_big_on);
+                                }
                             }
-                        }
                         }
 
                         for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
                             if (Objects.equals(areaSnapshot.child("localizacao").getValue(String.class), spin.getItemAtPosition(position).toString())){
-
+                                hum=0;
+                                temp=0;
+                                localization="";
+                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
+                                Date dateLast = null;
+                                try {
+                                    dateLast = sdf.parse("00/00/0000 00:00:00");
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                Date dateReceived = null;
                                 for ( DataSnapshot valores : areaSnapshot.child("valores").getChildren()) {
-                                    hum = Integer.parseInt(valores.child("humidade").getValue().toString());
-                                    temp = Integer.parseInt(valores.child("temperatura").getValue().toString());
-                                    dateField.setText("Data do registo: " + valores.child("data").getValue().toString());
-                                    localization = areaSnapshot.child("localizacao").getValue(String.class);
-                                    humidadeField.setText(hum + "%");
-                                    temperaturaField.setText(temp + " ºC");
+                                    try {
+                                        dateReceived = sdf.parse(valores.child("data").getValue().toString());
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if(dateLast.before(dateReceived)){
+                                        dateLast = dateReceived;
+                                        hum = Integer.parseInt(valores.child("humidade").getValue().toString());
+                                        temp = Integer.parseInt(valores.child("temperatura").getValue().toString());
+                                        dateField.setText("Data do registo: " + valores.child("data").getValue().toString());
+                                        localization = areaSnapshot.child("localizacao").getValue(String.class);
+                                        humidadeField.setText(hum + "%");
+                                        temperaturaField.setText(temp + " ºC");
 
-                                    if((temp>35 || temp<19) && (hum>75 || hum<50)){
-                                        humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
-                                        temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
-                                        globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
-                                        globalField.setText("MAU");
-                                        globalEvaluation = "MAU";
-                                    }else if((temp<=35 && temp>=19) && (hum>=50 && hum<=75)){
-                                        humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
-                                        temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
-                                        globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
-                                        globalField.setText("BOM");
-                                        globalEvaluation = "BOM";
-                                    }else{
-                                        globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_yellow, null));
-                                        globalField.setText("MÉDIO");
-                                        globalEvaluation = "MÉDIO";
-                                        if(temp<19 || temp>35){
-                                            temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
-
-                                        }else{
-                                            temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
-                                        }
-
-                                        if(hum<50 || hum>75){
+                                        if((temp>35 || temp<19) && (hum>75 || hum<50)){
                                             humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
-
-                                        }else{
+                                            temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
+                                            globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
+                                            globalField.setText("MAU");
+                                            globalEvaluation = "MAU";
+                                        }else if((temp<=35 && temp>=19) && (hum>=50 && hum<=75)){
                                             humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
+                                            temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
+                                            globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
+                                            globalField.setText("BOM");
+                                            globalEvaluation = "BOM";
+                                        }else{
+                                            globalField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_yellow, null));
+                                            globalField.setText("MÉDIO");
+                                            globalEvaluation = "MÉDIO";
+                                            if(temp<19 || temp>35){
+                                                temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
+
+                                            }else{
+                                                temperaturaField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
+                                            }
+
+                                            if(hum<50 || hum>75){
+                                                humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_red, null));
+
+                                            }else{
+                                                humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
+                                            }
                                         }
                                     }
                                 }
