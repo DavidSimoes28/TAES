@@ -136,7 +136,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                                 hum=0;
                                 temp=0;
                                 localization="";
-                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
+                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
                                 Date dateLast = null;
                                 try {
                                     dateLast = sdf.parse("00/00/0000 00:00:00");
