@@ -7,13 +7,17 @@ import androidx.core.content.res.ResourcesCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+
 import android.net.Uri;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+
 import android.widget.ImageButton;
+
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +52,8 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     private String localization;
     private String globalEvaluation;
     private TextView temperaturaField,humidadeField, globalField,dateField;
+    private Button btnSend;
+
     private Button btnTweet,btnLogout;
     private ImageButton btnFavorite;
     private String email;
@@ -56,11 +62,26 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     private User utilizador;
     private boolean hasFavoritos = false;
     private int aux = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_dashboard);
+
+        btnSend = findViewById(R.id.buttonSendData);
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentReceived = getIntent();
+                    String email = intentReceived.getStringExtra("email");
+                    Intent intent = new Intent(LoggedDashboardActivity.this, RegisterSensorActivity.class);
+                    intent.putExtra("email",email);
+                    startActivity(intent);
+                }
+            });
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null){
@@ -119,8 +140,10 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 //Setting the ArrayAdapter data on the Spinner
                 spin.setAdapter(aa);
                 spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
 
                         btnFavorite.setImageResource(btn_star_big_off);
                         if(hasFavoritos){
@@ -279,6 +302,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
             }
         });
         }
+
     }
 
 

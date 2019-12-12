@@ -55,6 +55,7 @@ public class DashboardGuestActivity extends AppCompatActivity {
 
         DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
         databasereference.child("Sensores").addValueEventListener(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
@@ -65,6 +66,7 @@ public class DashboardGuestActivity extends AppCompatActivity {
                 int temp = 0;
                 int medHum= 0;
                 int medTemp =0,i=0;
+
                 for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
                     for ( DataSnapshot valores : areaSnapshot.child("valores").getChildren()) {
                         medHum += Integer.parseInt(valores.child("humidade").getValue().toString());
