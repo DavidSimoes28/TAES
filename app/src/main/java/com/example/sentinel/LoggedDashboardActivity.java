@@ -52,9 +52,8 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     private String localization;
     private String globalEvaluation;
     private TextView temperaturaField,humidadeField, globalField,dateField;
+    private Button btnTweet,btnLogout,btnListFavourites;
     private Button btnSend;
-
-    private Button btnTweet,btnLogout;
     private ImageButton btnFavorite;
     private String email;
     public static final int btn_star_big_off = 17301515;
@@ -95,6 +94,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
         dateField = findViewById(R.id.textViewDatel);
         btnLogout = findViewById(R.id.buttonLogOut);
         btnFavorite = findViewById(R.id.btnFavorite);
+        btnListFavourites = findViewById(R.id.buttonFavorite);
         final Spinner spin = (Spinner) findViewById(R.id.spinner);
 
         btnFavorite.setImageResource(btn_star_big_off);
@@ -279,6 +279,17 @@ public class LoggedDashboardActivity extends AppCompatActivity {
 
             }
         });
+
+
+        btnListFavourites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoggedDashboardActivity.this, FavoritesActivity.class);
+                intent.putExtra("email",email);
+                startActivity(intent);
+            }
+        });
+
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
