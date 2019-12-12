@@ -83,7 +83,7 @@ public class RegisterSensorActivity extends AppCompatActivity {
 
                 Date data = Calendar.getInstance().getTime();
 
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
                 final String formattedDate = df.format(data);
 
                 DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference("Sensores");
@@ -102,7 +102,7 @@ public class RegisterSensorActivity extends AppCompatActivity {
                                     String date = areaSnapshot.child("data").getValue().toString();
 
                                     Valor valor = new Valor(date, temp, hum);
-                                    String key = areaSnapshot.getRef().push().getKey();
+                                    String key = areaSnapshot.getRef().push().getKey().replace("-","").replace("_","");
                                     areaSnapshot.child("valores").getRef().child(Objects.requireNonNull(key)).setValue(valor);
 
                                     areaSnapshot.child("humidade").getRef().setValue(humidade);

@@ -51,8 +51,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                     intent.putExtra("email",email);
                     startActivity(intent);
                 }
-            })
-            ;
+            });
 
 
         Bundle extras = getIntent().getExtras();
