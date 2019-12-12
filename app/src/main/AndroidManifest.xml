@@ -10,7 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".RegisterSensorActivity"></activity>
-        <activity android:name=".LoggedDashboardActivity" />
+
+        <activity android:name=".LoggedDashboardActivity"></activity>
+        <activity android:name=".ForgetPasswordActivity"></activity>
+        <activity android:name=".RegisterActivity" />
+
         <activity android:name=".LoginActivity" />
         <activity android:name=".DashboardGuestActivity">
             <intent-filter>
