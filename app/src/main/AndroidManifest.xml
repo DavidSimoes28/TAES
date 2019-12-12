@@ -12,7 +12,10 @@
         <activity android:name=".FavoritesActivity" />
         <activity android:name=".LoggedDashboardActivity" />
         <activity android:name=".ForgetPasswordActivity" />
+        <activity android:name=".RegisterSensorActivity"></activity>
+
         <activity android:name=".RegisterActivity" />
+
         <activity android:name=".LoginActivity" />
         <activity android:name=".DashboardGuestActivity">
             <intent-filter>
