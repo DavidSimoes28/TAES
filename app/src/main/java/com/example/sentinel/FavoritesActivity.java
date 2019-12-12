@@ -1,8 +1,10 @@
 package com.example.sentinel;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.sentinel.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +32,7 @@ public class FavoritesActivity extends AppCompatActivity {
     private String email;
     private boolean hasFavoritos = false;
     private ArrayList<String> arrayList;
+    private int aux = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +82,51 @@ public class FavoritesActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(FavoritesActivity.this, PopUpDetailsActivity.class);
-                intent.putExtra("localizacao",arrayList.get(position).toString());
-                startActivity(intent);
+                final String localizacao = arrayList.get(position);
+
+
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(DialogInterface.BUTTON_POSITIVE == which) {
+                            databasereference.child("Users").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot user : dataSnapshot.getChildren()) {
+                                        if (user.child("email").getValue().toString().equals(email)) {
+                                            if (aux == 0) {
+                                                if (utilizador.getFavoritos().contains(localizacao)) {
+                                                    utilizador.removeFavorito(localizacao);
+                                                    user.getRef().setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            Toast.makeText(getApplicationContext(), "Sensor on " + localizacao
+                                                                    + " removed from the favorites", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                                    arrayList.remove(localizacao);
+                                                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(FavoritesActivity.this, android.R.layout.simple_list_item_1, arrayList);
+                                                    listView.setAdapter(arrayAdapter);
+                                                    aux = 1;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }else if(DialogInterface.BUTTON_NEGATIVE == which) {
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(FavoritesActivity.this);
+                builder.setMessage("Pretende remover o Sensor da localização " + localizacao + " dos seus favoritos").setPositiveButton("Sim", dialogClickListener)
+                        .setNegativeButton("Não", dialogClickListener).show();
             }
         });
     }
