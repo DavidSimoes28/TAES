@@ -108,6 +108,7 @@ public class FavoritesActivity extends AppCompatActivity {
                                                     ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(FavoritesActivity.this, android.R.layout.simple_list_item_1, arrayList);
                                                     listView.setAdapter(arrayAdapter);
                                                     aux = 1;
+                                                    setResult(RESULT_OK);
                                                 }
                                             }
                                         }

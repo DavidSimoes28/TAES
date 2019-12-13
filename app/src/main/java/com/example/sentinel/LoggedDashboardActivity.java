@@ -36,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -286,7 +287,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoggedDashboardActivity.this, FavoritesActivity.class);
                 intent.putExtra("email",email);
-                startActivity(intent);
+                startActivityForResult(intent,1);
             }
         });
 
@@ -312,8 +313,51 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data) ;
+
+        if (resultCode  == RESULT_OK) {
+            updateDashboard();
         }
 
     }
+    public void updateDashboard() {
+
+        btnFavorite = findViewById(R.id.btnFavorite);
+        final Spinner spin = (Spinner) findViewById(R.id.spinner);
+        final ArrayList<String> localizacoes = new ArrayList<>();
+        FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                hasFavoritos = false;
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    if (child.child("email").getValue().toString().equals(email)) {
+                        utilizador = new User(child.child("email").getValue().toString(), child.child("password").getValue().toString());
+                        if (child.child("favoritos").getChildren().iterator().hasNext()) {
+                            for (DataSnapshot favoritos : child.child("favoritos").getChildren()) {
+                                utilizador.addFavorito(favoritos.getValue().toString());
+                                localizacoes.add(favoritos.getValue().toString());
+                                hasFavoritos = true;
+                            }
+                        }
+                    }
+                }
+                btnFavorite.setImageResource(btn_star_big_off);
+                for (String localizacao : localizacoes) {
+                    if(localizacao.equals(localization)){
+                        btnFavorite.setImageResource(btn_star_big_on);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+}
 
 
