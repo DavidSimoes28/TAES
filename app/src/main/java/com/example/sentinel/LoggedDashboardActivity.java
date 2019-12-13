@@ -36,8 +36,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,10 +53,10 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     private int temp;
     private String localization;
     private String globalEvaluation;
-    private TextView temperaturaField,humidadeField, globalField,dateField;
+    private TextView temperaturaField,humidadeField, globalField,dateField,dataRefresh;
     private Button btnTweet,btnLogout,btnListFavourites;
     private Button btnSend;
-    private ImageButton btnFavorite;
+    private ImageButton btnFavorite, btnRefresh;
     private String email;
     public static final int btn_star_big_off = 17301515;
     public static final int btn_star_big_on = 17301516;
@@ -95,7 +97,12 @@ public class LoggedDashboardActivity extends AppCompatActivity {
         btnLogout = findViewById(R.id.buttonLogOut);
         btnFavorite = findViewById(R.id.btnFavorite);
         btnListFavourites = findViewById(R.id.buttonFavorite);
+        dataRefresh = findViewById(R.id.textViewDatelRefresh);
+        btnRefresh = findViewById(R.id.btnRefresh1);
         final Spinner spin = (Spinner) findViewById(R.id.spinner);
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        dataRefresh.setText("Data de ultima atualização :"+ sdf.format(GregorianCalendar.getInstance().getTime()));
 
         btnFavorite.setImageResource(btn_star_big_off);
         final DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
@@ -159,7 +166,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                                 hum=0;
                                 temp=0;
                                 localization="";
-                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                                 Date dateLast = null;
                                 try {
                                     dateLast = sdf.parse("00/00/0000 00:00:00");
@@ -312,8 +319,15 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 finish();
             }
         });
-        }
 
-    }
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                dataRefresh.setText("Data de ultima atualização :"+ sdf.format(GregorianCalendar.getInstance().getTime()));
+            }
+        });
+        }
+}
 
 
