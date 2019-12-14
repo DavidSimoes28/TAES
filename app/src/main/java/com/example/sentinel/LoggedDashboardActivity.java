@@ -52,7 +52,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     private String localization;
     private String globalEvaluation;
     private TextView temperaturaField,humidadeField, globalField,dateField;
-    private Button btnTweet,btnLogout,btnListFavourites;
+    private Button btnTweet,btnLogout,btnListFavourites,btnProfile;
     private Button btnSend;
     private ImageButton btnFavorite;
     private String email;
@@ -96,6 +96,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
         btnFavorite = findViewById(R.id.btnFavorite);
         btnListFavourites = findViewById(R.id.buttonFavorite);
         final Spinner spin = (Spinner) findViewById(R.id.spinner);
+        btnProfile = findViewById(R.id.buttonProfile);
 
         btnFavorite.setImageResource(btn_star_big_off);
         final DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
@@ -280,6 +281,14 @@ public class LoggedDashboardActivity extends AppCompatActivity {
             }
         });
 
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoggedDashboardActivity.this, ProfileActivity.class);
+                intent.putExtra("email",email);
+                startActivity(intent);
+            }
+        });
 
         btnListFavourites.setOnClickListener(new View.OnClickListener() {
             @Override
