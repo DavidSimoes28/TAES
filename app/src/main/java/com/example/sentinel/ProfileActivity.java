@@ -1,8 +1,10 @@
 package com.example.sentinel;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -148,37 +150,51 @@ public class ProfileActivity extends AppCompatActivity {
         buttonDeactivateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                aux=0;
-                databasereference.child("Users").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            if(child.child("email").getValue().toString().equals(email)){
-                                if (aux == 0) {
-                                    utilizador.setEmail(utilizador.getEmail()+" - Deactivate Account");
-                                    child.getRef().setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    Toast.makeText(getApplicationContext(), "User Deactivated", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                        }
-                                    });
-                                    aux = 1;
-                                }
-                            }
-                        }
-                        setResult(RESULT_OK);
-                        finish();
-                    }
 
+
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(DialogInterface.BUTTON_POSITIVE == which) {
+                            aux=0;
+                            databasereference.child("Users").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                        if(child.child("email").getValue().toString().equals(email)){
+                                            if (aux == 0) {
+                                                utilizador.setEmail(utilizador.getEmail()+" - Deactivate Account");
+                                                child.getRef().setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                Toast.makeText(getApplicationContext(), "User Deactivated", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                                aux = 1;
+                                            }
+                                        }
+                                    }
+                                    setResult(RESULT_OK);
+                                    finish();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                }
+                            });
+                        }
                     }
-                });
+                };
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                builder.setMessage("Are you sure that you want to deactivate your account").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
             }
         });
     }
