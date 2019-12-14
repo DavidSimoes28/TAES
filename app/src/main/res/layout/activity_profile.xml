@@ -5,21 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".LoginActivity">
+    tools:context=".ProfileActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textViewInfoRegister"
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="40dp"
-            android:text="Register" />
+            android:text="Profile"
+            android:textSize="24sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -28,20 +28,51 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textViewName"
+            android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Name:"
-            android:textSize="20dp" />
+            android:text="Nome:" />
 
-        <EditText
-            android:id="@+id/editTextName"
+        <TextView
+            android:id="@+id/textViewNomeProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textEmailAddress" />
+            android:text="TextView" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Email:" />
+
+        <TextView
+            android:id="@+id/textViewEmailProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TextView" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonDeactivate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Deactivate Account" />
     </LinearLayout>
 
     <LinearLayout
@@ -50,20 +81,13 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textViewEmail"
+            android:id="@+id/textView7"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:layout_weight="1"
-            android:text="Email:"
-            android:textSize="20dp" />
-
-        <EditText
-            android:id="@+id/editTextEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textEmailAddress" />
+            android:gravity="center"
+            android:text="Change Password"
+            android:textSize="24sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -72,15 +96,14 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textViewPassword"
+            android:id="@+id/textView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Password"
-            android:textSize="20dp" />
+            android:text="Old Password:" />
 
         <EditText
-            android:id="@+id/editTextPassword"
+            android:id="@+id/editTextOldPasswordProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -90,19 +113,39 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="67dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textViewConfirmPassword"
+            android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Confirm Password"
-            android:textSize="20dp" />
+            android:text="New Password" />
 
         <EditText
-            android:id="@+id/editTextConfirmPassword"
+            android:id="@+id/editTextNewPasswordProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPassword" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Password Confirmation:" />
+
+        <EditText
+            android:id="@+id/editTextConfirmationPasswordProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -116,19 +159,17 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/buttonRegister"
-            android:layout_width="match_parent"
+            android:id="@+id/buttonAlterPasswordProfile"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Register"
-            android:textSize="20dp" />
+            android:text="Alter Password" />
 
         <Button
-            android:id="@+id/buttonCancelarLogin"
-            android:layout_width="match_parent"
+            android:id="@+id/buttonCancelProfile"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancelar"
-            android:textSize="20dp" />
+            android:text="Cancel" />
     </LinearLayout>
 </LinearLayout>

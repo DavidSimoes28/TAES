@@ -77,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            UserManager.INSTANCE.addUser(new User(email,password));
                             Toast.makeText(getApplicationContext(), "Authentication success.", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this, LoggedDashboardActivity.class);
                             intent.putExtra("email",email);
