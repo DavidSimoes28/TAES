@@ -69,7 +69,7 @@ public class FavoritesActivity extends AppCompatActivity {
                     ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(FavoritesActivity.this, android.R.layout.simple_list_item_1, arrayList);
                     listView.setAdapter(arrayAdapter);
                 }else {
-                    Toast.makeText(getApplicationContext(), "Sem favoritos adicionados", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "You don't have favorite sensors", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -125,7 +125,7 @@ public class FavoritesActivity extends AppCompatActivity {
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(FavoritesActivity.this);
-                builder.setMessage("Pretende remover o Sensor da localização " + localizacao + " dos seus favoritos").setPositiveButton("Sim", dialogClickListener)
+                builder.setMessage("Do you want to remove the sensor on the localization " + localizacao + " from your favorites").setPositiveButton("Sim", dialogClickListener)
                         .setNegativeButton("Não", dialogClickListener).show();
             }
         });
