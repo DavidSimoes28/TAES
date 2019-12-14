@@ -89,7 +89,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
                                         Toast.makeText(getApplicationContext(), "Registration success.", Toast.LENGTH_SHORT).show();
-                                        UserManager.INSTANCE.addUser(user);
                                         finish();
                                     }
                                 }

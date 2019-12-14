@@ -55,7 +55,7 @@ public class FavoritesActivity extends AppCompatActivity {
                 arrayList = new ArrayList<>();
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     if (Objects.requireNonNull(child.child("email").getValue()).toString().equals(email)) {
-                        utilizador = new User(child.child("email").getValue().toString(), child.child("password").getValue().toString());
+                        utilizador = new User(child.child("name").getValue().toString(),child.child("email").getValue().toString(), child.child("password").getValue().toString());
                         if (child.child("favoritos").getChildren().iterator().hasNext()) {
                             for (DataSnapshot favoritos : child.child("favoritos").getChildren()) {
                                 utilizador.addFavorito(favoritos.getValue().toString());
