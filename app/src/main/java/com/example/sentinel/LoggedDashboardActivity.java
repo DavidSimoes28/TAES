@@ -293,7 +293,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoggedDashboardActivity.this, ProfileActivity.class);
                 intent.putExtra("email",email);
-                startActivity(intent);
+                startActivityForResult(intent,2);
             }
         });
 
@@ -341,10 +341,17 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data) ;
 
-        if (resultCode  == RESULT_OK) {
+        if (resultCode  == RESULT_OK && requestCode == 1) {
             updateDashboard();
         }
+        if (resultCode  == RESULT_OK && requestCode == 2) {
+            FirebaseAuth.getInstance().signOut();
+            closeDashboard();
+        }
+    }
 
+    public void closeDashboard(){
+        this.finish();
     }
     public void updateDashboard() {
 
