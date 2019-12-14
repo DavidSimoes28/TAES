@@ -29,11 +29,11 @@
                 android:text="Send" />
 
             <Button
-                android:id="@+id/buttonExposure"
+                android:id="@+id/buttonProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="My Exposure" />
+                android:text="Profile" />
 
             <Button
                 android:id="@+id/buttonLogOut"

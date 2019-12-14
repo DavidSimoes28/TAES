@@ -54,7 +54,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     private String localization;
     private String globalEvaluation;
     private TextView temperaturaField,humidadeField, globalField,dateField,dataRefresh;
-    private Button btnTweet,btnLogout,btnListFavourites;
+    private Button btnTweet,btnLogout,btnListFavourites,btnProfile;
     private Button btnSend;
     private ImageButton btnFavorite, btnRefresh;
     private String email;
@@ -100,6 +100,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
         dataRefresh = findViewById(R.id.textViewDatelRefresh);
         btnRefresh = findViewById(R.id.btnRefresh1);
         final Spinner spin = (Spinner) findViewById(R.id.spinner);
+        btnProfile = findViewById(R.id.buttonProfile);
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         dataRefresh.setText("Data de ultima atualização :"+ sdf.format(GregorianCalendar.getInstance().getTime()));
@@ -113,7 +114,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 hasFavoritos = false;
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     if(child.child("email").getValue().toString().equals(email)){
-                        utilizador = new User(child.child("email").getValue().toString(),child.child("password").getValue().toString());
+                        utilizador = new User(child.child("name").getValue().toString(),child.child("email").getValue().toString(),child.child("password").getValue().toString());
                         if(child.child("favoritos").getChildren().iterator().hasNext()){
                             for (DataSnapshot favoritos : child.child("favoritos").getChildren()) {
                                 utilizador.addFavorito(favoritos.getValue().toString());
@@ -287,13 +288,21 @@ public class LoggedDashboardActivity extends AppCompatActivity {
             }
         });
 
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoggedDashboardActivity.this, ProfileActivity.class);
+                intent.putExtra("email",email);
+                startActivity(intent);
+            }
+        });
 
         btnListFavourites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoggedDashboardActivity.this, FavoritesActivity.class);
                 intent.putExtra("email",email);
-                startActivity(intent);
+                startActivityForResult(intent,1);
             }
         });
 
@@ -327,7 +336,51 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 dataRefresh.setText("Data de ultima atualização :"+ sdf.format(GregorianCalendar.getInstance().getTime()));
             }
         });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data) ;
+
+        if (resultCode  == RESULT_OK) {
+            updateDashboard();
         }
+
+    }
+    public void updateDashboard() {
+
+        btnFavorite = findViewById(R.id.btnFavorite);
+        final Spinner spin = (Spinner) findViewById(R.id.spinner);
+        final ArrayList<String> localizacoes = new ArrayList<>();
+        FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                hasFavoritos = false;
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    if (child.child("email").getValue().toString().equals(email)) {
+                        utilizador = new User(child.child("name").getValue().toString(),child.child("email").getValue().toString(), child.child("password").getValue().toString());
+                        if (child.child("favoritos").getChildren().iterator().hasNext()) {
+                            for (DataSnapshot favoritos : child.child("favoritos").getChildren()) {
+                                utilizador.addFavorito(favoritos.getValue().toString());
+                                localizacoes.add(favoritos.getValue().toString());
+                                hasFavoritos = true;
+                            }
+                        }
+                    }
+                }
+                btnFavorite.setImageResource(btn_star_big_off);
+                for (String localizacao : localizacoes) {
+                    if(localizacao.equals(localization)){
+                        btnFavorite.setImageResource(btn_star_big_on);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }
 
 

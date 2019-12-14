@@ -55,7 +55,7 @@ public class FavoritesActivity extends AppCompatActivity {
                 arrayList = new ArrayList<>();
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     if (Objects.requireNonNull(child.child("email").getValue()).toString().equals(email)) {
-                        utilizador = new User(child.child("email").getValue().toString(), child.child("password").getValue().toString());
+                        utilizador = new User(child.child("name").getValue().toString(),child.child("email").getValue().toString(), child.child("password").getValue().toString());
                         if (child.child("favoritos").getChildren().iterator().hasNext()) {
                             for (DataSnapshot favoritos : child.child("favoritos").getChildren()) {
                                 utilizador.addFavorito(favoritos.getValue().toString());
@@ -69,7 +69,7 @@ public class FavoritesActivity extends AppCompatActivity {
                     ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(FavoritesActivity.this, android.R.layout.simple_list_item_1, arrayList);
                     listView.setAdapter(arrayAdapter);
                 }else {
-                    Toast.makeText(getApplicationContext(), "Sem favoritos adicionados", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "You don't have favorite sensors", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -108,6 +108,7 @@ public class FavoritesActivity extends AppCompatActivity {
                                                     ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(FavoritesActivity.this, android.R.layout.simple_list_item_1, arrayList);
                                                     listView.setAdapter(arrayAdapter);
                                                     aux = 1;
+                                                    setResult(RESULT_OK);
                                                 }
                                             }
                                         }
@@ -125,7 +126,7 @@ public class FavoritesActivity extends AppCompatActivity {
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(FavoritesActivity.this);
-                builder.setMessage("Pretende remover o Sensor da localização " + localizacao + " dos seus favoritos").setPositiveButton("Sim", dialogClickListener)
+                builder.setMessage("Do you want to remove the sensor on the localization " + localizacao + " from your favorites").setPositiveButton("Sim", dialogClickListener)
                         .setNegativeButton("Não", dialogClickListener).show();
             }
         });
