@@ -25,7 +25,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private Button btnRegister, btnCancel;
-    private EditText inputEmail, inputPassword, inputPasswordConfirmation;
+    private EditText inputEmail, inputPassword, inputPasswordConfirmation, inputName;
     private TextView forgetPassword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +38,22 @@ public class RegisterActivity extends AppCompatActivity {
         inputEmail = findViewById(R.id.editTextEmail);
         inputPassword = findViewById(R.id.editTextPassword);
         inputPasswordConfirmation = findViewById(R.id.editTextConfirmPassword);
+        inputName = findViewById(R.id.editTextName);
         btnCancel = findViewById(R.id.buttonCancelarLogin);
         forgetPassword = findViewById(R.id.textViewForgetPassword);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final String name = inputName.getText().toString().trim();
                 final String email = inputEmail.getText().toString().trim();
                 final String password = inputPassword.getText().toString().trim();
                 final String passwordConfirmation = inputPasswordConfirmation.getText().toString().trim();
+
+                if (TextUtils.isEmpty(name)) {
+                    Toast.makeText(getApplicationContext(), "Enter your name!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
@@ -76,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            final User user = new User(email,password);
+                            final User user = new User(name,email,password);
                             FirebaseDatabase.getInstance().getReference("Users").child(mAuth.getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
