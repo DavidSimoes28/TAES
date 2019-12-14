@@ -102,7 +102,7 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Password and Confirm password are not the same!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                
+
                 aux=0;
                 databasereference.child("Users").addValueEventListener(new ValueEventListener() {
                     @Override
@@ -125,7 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        finish();
                     }
                 });
             }
