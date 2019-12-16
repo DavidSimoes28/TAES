@@ -112,20 +112,20 @@ public class RegisterSensorActivity extends AppCompatActivity implements SensorE
                             if (def == 0) {
                                 if (Objects.equals(areaSnapshot.child("localizacao").getValue(String.class), local)) {
 
-                                    int hum = Integer.parseInt(areaSnapshot.child("humidade").getValue().toString());
-                                    int temp = Integer.parseInt(areaSnapshot.child("temperatura").getValue().toString());
-                                    String date = areaSnapshot.child("data").getValue().toString();
+                                   // int hum = Integer.parseInt(areaSnapshot.child("humidade").getValue().toString());
+                                    //int temp = Integer.parseInt(areaSnapshot.child("temperatura").getValue().toString());
+                                   // String date = areaSnapshot.child("data").getValue().toString();
 
-                                    Valor valor = new Valor(date, temp, hum);
+                                    Valor valor = new Valor(formattedDate ,Integer.parseInt(temperatura) , Integer.parseInt(humidade));
                                     String key = areaSnapshot.getRef().push().getKey().replace("-", "").replace("_", "");
                                     areaSnapshot.child("valores").getRef().child(Objects.requireNonNull(key)).setValue(valor);
 
-                                    areaSnapshot.child("humidade").getRef().setValue(humidade);
+                                 /*   areaSnapshot.child("humidade").getRef().setValue(humidade);
 
                                     areaSnapshot.child("temperatura").getRef().setValue(temperatura);
-                                    areaSnapshot.child("data").getRef().setValue(formattedDate);
+                                    areaSnapshot.child("data").getRef().setValue(formattedDate);*/
 
-                                    Toast.makeText(getApplicationContext(), "Sucessfully sent SensorUp Data.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Sucessfully sent Sensor Data.", Toast.LENGTH_SHORT).show();
 
                                     def = 1;
                                     goback(intent);
