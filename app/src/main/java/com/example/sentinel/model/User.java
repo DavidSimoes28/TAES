@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public class User {
+    private String name;
     private String email;
     private String password;
     private List<String> favoritos;
@@ -16,10 +17,19 @@ public class User {
         this.favoritos = new ArrayList<>();
     }
 
-    public User(String email, String password) {
+    public User(String name, String email, String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
         this.favoritos = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
