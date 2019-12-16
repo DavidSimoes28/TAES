@@ -46,14 +46,14 @@ public class DashboardGuestActivity extends AppCompatActivity {
         textViewDataRefresh = findViewById(R.id.textViewDataRefresh);
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-        textViewDataRefresh.setText("Data de ultima atualização :"+ sdf.format(GregorianCalendar.getInstance().getTime()));
+        textViewDataRefresh.setText("Date of last update: "+ sdf.format(GregorianCalendar.getInstance().getTime()));
 
 
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                textViewDataRefresh.setText("Data de ultima atualização :"+ sdf.format(GregorianCalendar.getInstance().getTime()));
+                textViewDataRefresh.setText("Date of last update: "+ sdf.format(GregorianCalendar.getInstance().getTime()));
 
             }
         });
@@ -99,7 +99,7 @@ public class DashboardGuestActivity extends AppCompatActivity {
                         }
 
                         if(dateLast.before(dateReceived)){
-                                textViewData.setText("Data do sensor: " + valores.child("data").getValue().toString());
+                                textViewData.setText("Last registered date: " + valores.child("data").getValue().toString());
                                 dateLast = dateReceived;
                         }
                         medHum += Integer.parseInt(valores.child("humidade").getValue().toString());

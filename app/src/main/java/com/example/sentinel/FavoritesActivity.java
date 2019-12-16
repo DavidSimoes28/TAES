@@ -126,8 +126,8 @@ public class FavoritesActivity extends AppCompatActivity {
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(FavoritesActivity.this);
-                builder.setMessage("Do you want to remove the sensor on the localization " + localizacao + " from your favorites").setPositiveButton("Sim", dialogClickListener)
-                        .setNegativeButton("Não", dialogClickListener).show();
+                builder.setMessage("Do you want to remove the sensor on the localization " + localizacao + " from your favorites").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
             }
         });
     }

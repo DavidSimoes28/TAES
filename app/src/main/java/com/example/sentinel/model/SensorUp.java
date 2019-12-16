@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Sensor {
+public class SensorUp {
     private int id;
     private String localizacao;
     private String humidade;
@@ -15,7 +15,7 @@ public class Sensor {
     private List<Favoritos> favoritos;
 
 
-    public Sensor(int id,String localizacao, String humidade, String data, String temperatura,Favoritos email) {
+    public SensorUp(int id, String localizacao, String humidade, String data, String temperatura, Favoritos email) {
         this.id = id;
         this.localizacao = localizacao;
         this.humidade = humidade;

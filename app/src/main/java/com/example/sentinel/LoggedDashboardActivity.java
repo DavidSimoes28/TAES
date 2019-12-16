@@ -72,16 +72,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
 
         btnSend = findViewById(R.id.buttonSendData);
 
-        btnSend.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intentReceived = getIntent();
-                    String email = intentReceived.getStringExtra("email");
-                    Intent intent = new Intent(LoggedDashboardActivity.this, RegisterSensorActivity.class);
-                    intent.putExtra("email",email);
-                    startActivity(intent);
-                }
-            });
+
 
 
         Bundle extras = getIntent().getExtras();
@@ -103,7 +94,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
         btnProfile = findViewById(R.id.buttonProfile);
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        dataRefresh.setText("Data de ultima atualização :"+ sdf.format(GregorianCalendar.getInstance().getTime()));
+        dataRefresh.setText("Date of last update: "+ sdf.format(GregorianCalendar.getInstance().getTime()));
 
         btnFavorite.setImageResource(btn_star_big_off);
         final DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
@@ -169,6 +160,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                                 localization="";
                                 @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                                 Date dateLast = null;
+
                                 try {
                                     dateLast = sdf.parse("00/00/0000 00:00:00");
                                 } catch (ParseException e) {
@@ -183,9 +175,10 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                                     }
                                     if(dateLast.before(dateReceived)){
                                         dateLast = dateReceived;
+
                                         hum = Integer.parseInt(valores.child("humidade").getValue().toString());
                                         temp = Integer.parseInt(valores.child("temperatura").getValue().toString());
-                                        dateField.setText("Data do registo: " + valores.child("data").getValue().toString());
+                                        dateField.setText("Register date: " + valores.child("data").getValue().toString());
                                         localization = areaSnapshot.child("localizacao").getValue(String.class);
                                         humidadeField.setText(hum + "%");
                                         temperaturaField.setText(temp + " ºC");
@@ -220,6 +213,8 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                                                 humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
                                             }
                                         }
+
+
                                     }
                                 }
                                 break;
@@ -329,11 +324,25 @@ public class LoggedDashboardActivity extends AppCompatActivity {
             }
         });
 
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentReceived = getIntent();
+                String email = intentReceived.getStringExtra("email");
+                Intent intent = new Intent(LoggedDashboardActivity.this, RegisterSensorActivity.class);
+                intent.putExtra("email",email);
+                intent.putExtra("localization",localization);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                dataRefresh.setText("Data de ultima atualização :"+ sdf.format(GregorianCalendar.getInstance().getTime()));
+                dataRefresh.setText("Date of last update: "+ sdf.format(GregorianCalendar.getInstance().getTime()));
             }
         });
     }
@@ -343,6 +352,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
 
         if (resultCode  == RESULT_OK && requestCode == 1) {
             updateDashboard();
+
         }
         if (resultCode  == RESULT_OK && requestCode == 2) {
             FirebaseAuth.getInstance().signOut();
