@@ -9,12 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RegisterSensorActivity"></activity>
-
-        <activity android:name=".LoggedDashboardActivity"></activity>
-        <activity android:name=".ForgetPasswordActivity"></activity>
+        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".FavoritesActivity" />
+        <activity android:name=".LoggedDashboardActivity" />
+        <activity android:name=".ForgetPasswordActivity" />
+        <activity android:name=".RegisterSensorActivity" />
         <activity android:name=".RegisterActivity" />
+
         <activity android:name=".StatisticsActivity" />
+
         <activity android:name=".LoginActivity" />
         <activity android:name=".DashboardGuestActivity">
             <intent-filter>

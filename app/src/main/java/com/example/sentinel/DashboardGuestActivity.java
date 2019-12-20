@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -17,15 +18,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 
 public class DashboardGuestActivity extends AppCompatActivity {
 
-    private TextView temperaturaField, humidadeField, globalField, textViewData;
+    private TextView temperaturaField, humidadeField, globalField, textViewData,textViewDataRefresh;
     private Button btnRegister;
+    private ImageButton btnRefresh;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +41,22 @@ public class DashboardGuestActivity extends AppCompatActivity {
         View btnLogin = findViewById(R.id.buttonLogin);
         textViewData = findViewById(R.id.textViewData);
         btnRegister = findViewById(R.id.buttonRegister);
+        btnRefresh = findViewById(R.id.btnRefresh);
+        btnRefresh = findViewById(R.id.btnRefresh);
+        textViewDataRefresh = findViewById(R.id.textViewDataRefresh);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+        textViewDataRefresh.setText("Date of last update: "+ sdf.format(GregorianCalendar.getInstance().getTime()));
 
 
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                textViewDataRefresh.setText("Date of last update: "+ sdf.format(GregorianCalendar.getInstance().getTime()));
+
+            }
+        });
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,17 +76,32 @@ public class DashboardGuestActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-                Date date = Calendar.getInstance().getTime();
-                textViewData.setText("Data da ultima atualização: " + sdf.format(date));
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
                 int hum = 0;
                 int temp = 0;
                 int medHum= 0;
                 int medTemp =0,i=0;
+                Date dateReceived = null;
+                Date dateLast = null;
+                try {
+                    dateLast = sdf.parse("00/00/0000 00:00:00");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
                 for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
                     for ( DataSnapshot valores : areaSnapshot.child("valores").getChildren()) {
+                        try {
+                            dateReceived = sdf.parse(valores.child("data").getValue().toString());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(dateLast.before(dateReceived)){
+                                textViewData.setText("Last registered date: " + valores.child("data").getValue().toString());
+                                dateLast = dateReceived;
+                        }
                         medHum += Integer.parseInt(valores.child("humidade").getValue().toString());
                         medTemp += Integer.parseInt(valores.child("temperatura").getValue().toString());
                         i++;
@@ -114,7 +147,11 @@ public class DashboardGuestActivity extends AppCompatActivity {
 
             }
         });
-    }
 
+
+    }
+    public void refresh(){
+
+    }
 
 }

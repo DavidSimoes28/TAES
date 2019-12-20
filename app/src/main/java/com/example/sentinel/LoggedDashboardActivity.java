@@ -36,8 +36,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,11 +53,15 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     private int temp;
     private String localization;
     private String globalEvaluation;
-    private TextView temperaturaField,humidadeField, globalField,dateField;
+    private TextView temperaturaField,humidadeField, globalField,dateField,dataRefresh;
+    private Button btnTweet,btnLogout,btnListFavourites,btnProfile;
     private Button btnSend;
 
-    private Button btnTweet,btnLogout, btnStatistics;
-    private ImageButton btnFavorite;
+
+    private Button  btnStatistics;
+    private ImageButton btnFavorite,btnRefresh;
+
+
     private String email;
     public static final int btn_star_big_off = 17301515;
     public static final int btn_star_big_on = 17301516;
@@ -71,16 +77,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
 
         btnSend = findViewById(R.id.buttonSendData);
 
-        btnSend.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intentReceived = getIntent();
-                    String email = intentReceived.getStringExtra("email");
-                    Intent intent = new Intent(LoggedDashboardActivity.this, RegisterSensorActivity.class);
-                    intent.putExtra("email",email);
-                    startActivity(intent);
-                }
-            });
+
 
         btnStatistics = findViewById(R.id.buttonStatistics);
         btnStatistics.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +101,14 @@ public class LoggedDashboardActivity extends AppCompatActivity {
         dateField = findViewById(R.id.textViewDatel);
         btnLogout = findViewById(R.id.buttonLogOut);
         btnFavorite = findViewById(R.id.btnFavorite);
+        btnListFavourites = findViewById(R.id.buttonFavorite);
+        dataRefresh = findViewById(R.id.textViewDatelRefresh);
+        btnRefresh = findViewById(R.id.btnRefresh1);
         final Spinner spin = (Spinner) findViewById(R.id.spinner);
+        btnProfile = findViewById(R.id.buttonProfile);
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        dataRefresh.setText("Date of last update: "+ sdf.format(GregorianCalendar.getInstance().getTime()));
 
         btnFavorite.setImageResource(btn_star_big_off);
         final DatabaseReference databasereference = FirebaseDatabase.getInstance().getReference();
@@ -115,7 +119,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 hasFavoritos = false;
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     if(child.child("email").getValue().toString().equals(email)){
-                        utilizador = new User(child.child("email").getValue().toString(),child.child("password").getValue().toString());
+                        utilizador = new User(child.child("name").getValue().toString(),child.child("email").getValue().toString(),child.child("password").getValue().toString());
                         if(child.child("favoritos").getChildren().iterator().hasNext()){
                             for (DataSnapshot favoritos : child.child("favoritos").getChildren()) {
                                 utilizador.addFavorito(favoritos.getValue().toString());
@@ -168,8 +172,9 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                                 hum=0;
                                 temp=0;
                                 localization="";
-                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                                 Date dateLast = null;
+
                                 try {
                                     dateLast = sdf.parse("00/00/0000 00:00:00");
                                 } catch (ParseException e) {
@@ -184,9 +189,10 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                                     }
                                     if(dateLast.before(dateReceived)){
                                         dateLast = dateReceived;
+
                                         hum = Integer.parseInt(valores.child("humidade").getValue().toString());
                                         temp = Integer.parseInt(valores.child("temperatura").getValue().toString());
-                                        dateField.setText("Data do registo: " + valores.child("data").getValue().toString());
+                                        dateField.setText("Register date: " + valores.child("data").getValue().toString());
                                         localization = areaSnapshot.child("localizacao").getValue(String.class);
                                         humidadeField.setText(hum + "%");
                                         temperaturaField.setText(temp + " ºC");
@@ -221,6 +227,8 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                                                 humidadeField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.circle_textview_green, null));
                                             }
                                         }
+
+
                                     }
                                 }
                                 break;
@@ -288,6 +296,25 @@ public class LoggedDashboardActivity extends AppCompatActivity {
 
             }
         });
+
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoggedDashboardActivity.this, ProfileActivity.class);
+                intent.putExtra("email",email);
+                startActivityForResult(intent,2);
+            }
+        });
+
+        btnListFavourites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoggedDashboardActivity.this, FavoritesActivity.class);
+                intent.putExtra("email",email);
+                startActivityForResult(intent,1);
+            }
+        });
+
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,8 +337,81 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                 finish();
             }
         });
-        }
 
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentReceived = getIntent();
+                String email = intentReceived.getStringExtra("email");
+                Intent intent = new Intent(LoggedDashboardActivity.this, RegisterSensorActivity.class);
+                intent.putExtra("email",email);
+                intent.putExtra("localization",localization);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                dataRefresh.setText("Date of last update: "+ sdf.format(GregorianCalendar.getInstance().getTime()));
+            }
+        });
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data) ;
+
+        if (resultCode  == RESULT_OK && requestCode == 1) {
+            updateDashboard();
+
+        }
+        if (resultCode  == RESULT_OK && requestCode == 2) {
+            FirebaseAuth.getInstance().signOut();
+            closeDashboard();
+        }
+    }
+
+    public void closeDashboard(){
+        this.finish();
+    }
+    public void updateDashboard() {
+
+        btnFavorite = findViewById(R.id.btnFavorite);
+        final Spinner spin = (Spinner) findViewById(R.id.spinner);
+        final ArrayList<String> localizacoes = new ArrayList<>();
+        FirebaseDatabase.getInstance().getReference().child("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                hasFavoritos = false;
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    if (child.child("email").getValue().toString().equals(email)) {
+                        utilizador = new User(child.child("name").getValue().toString(),child.child("email").getValue().toString(), child.child("password").getValue().toString());
+                        if (child.child("favoritos").getChildren().iterator().hasNext()) {
+                            for (DataSnapshot favoritos : child.child("favoritos").getChildren()) {
+                                utilizador.addFavorito(favoritos.getValue().toString());
+                                localizacoes.add(favoritos.getValue().toString());
+                                hasFavoritos = true;
+                            }
+                        }
+                    }
+                }
+                btnFavorite.setImageResource(btn_star_big_off);
+                for (String localizacao : localizacoes) {
+                    if(localizacao.equals(localization)){
+                        btnFavorite.setImageResource(btn_star_big_on);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+}
 
 
