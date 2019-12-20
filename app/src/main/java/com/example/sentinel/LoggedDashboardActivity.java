@@ -54,7 +54,7 @@ public class LoggedDashboardActivity extends AppCompatActivity {
     private TextView temperaturaField,humidadeField, globalField,dateField;
     private Button btnSend;
 
-    private Button btnTweet,btnLogout;
+    private Button btnTweet,btnLogout, btnStatistics;
     private ImageButton btnFavorite;
     private String email;
     public static final int btn_star_big_off = 17301515;
@@ -81,6 +81,15 @@ public class LoggedDashboardActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
+
+        btnStatistics = findViewById(R.id.buttonStatistics);
+        btnStatistics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoggedDashboardActivity.this, StatisticsActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         Bundle extras = getIntent().getExtras();

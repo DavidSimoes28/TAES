@@ -14,7 +14,7 @@
         <activity android:name=".LoggedDashboardActivity"></activity>
         <activity android:name=".ForgetPasswordActivity"></activity>
         <activity android:name=".RegisterActivity" />
-
+        <activity android:name=".StatisticsActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".DashboardGuestActivity">
             <intent-filter>
