@@ -24,6 +24,9 @@ import com.jjoe64.graphview.series.Series;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -73,10 +76,11 @@ public class StatisticsActivity extends AppCompatActivity {
                 //Setting the ArrayAdapter data on the Spinner
                 spin.setAdapter(aa);
                 spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-
+                        graph.removeAllSeries();
 
                         for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
                             if (Objects.equals(areaSnapshot.child("localizacao").getValue(String.class), spin.getItemAtPosition(position).toString())) {
@@ -84,22 +88,24 @@ public class StatisticsActivity extends AppCompatActivity {
                                 temp = 0;
                                 localization = "";
 
+                                ArrayList<Integer> temperatura = new ArrayList<>();
+                                ArrayList<Integer> humidade = new ArrayList<>();
                                 for (DataSnapshot valores : areaSnapshot.child("valores").getChildren()) {
-                                    LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                                    new DataPoint(1, 3)
-                                    });
+                                    humidade.add(Integer.parseInt(valores.child("humidade").getValue().toString()));
+                                    temperatura.add(Integer.parseInt(valores.child("temperatura").getValue().toString()));
+                                }
+                                Collections.sort(temperatura);
+                                Collections.sort(humidade);
 
+
+                                LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+                                for (int i=0; i<temperatura.size(); i++) {
+                                    DataPoint point = new DataPoint(temperatura.get(i), humidade.get(i));
+                                    series.appendData(point, true,100);
                                 }
                                 graph.addSeries(series);
 
-                                /*LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                                        new DataPoint(0, 1),
-                                        new DataPoint(1, 5),
-                                        new DataPoint(2, 3),
-                                        new DataPoint(3, 2),
-                                        new DataPoint(4, 6)
-                                });
-                                graph.addSeries(series);*/
+
 
 
                             }
